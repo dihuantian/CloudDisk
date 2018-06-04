@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8"/>
+    <title>用户首页</title>
+    <link rel="stylesheet" type="text/css" href="/css/nav.css"/>
+    <link rel="stylesheet" type="text/css" href="/font/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/awesome/font-awesome.4.6.0.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/mouse-right.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/reconstitution.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap/bootstrap-table.css"/>
+</head>
+<body>
+<div class="nav" id="nav">
+    <div class="nav-top">
+        <div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)">
+            <img src="/image/mini.png">
+            <span id="user" style="padding: 0 10px">
+                <img src="/image/user.png" style="padding-left: 4px;margin-top: -4px;">
+            </span>
+        </div>
+    </div>
+    <ul>
+        <li class="nav-item">
+            <a href="/disk/all"><i class="my-icon nav-icon icon_1"></i><span>全部文件</span><i
+                    class="my-icon nav-more"></i></a>
+        </li>
+        <li class="nav-item">
+            <a href="/disk/image"><i class="my-icon nav-icon icon_2"></i><span>图片</span><i
+                    class="my-icon nav-more"></i></a>
+        </li>
+        <li class="nav-item">
+            <a href="/disk/documents"><i class="local nav-icon fa fa-file-text"></i><span>文档</span><i
+                    class="my-icon nav-more"></i></a>
+        </li>
+        <li class="nav-item">
+            <a href="/disk/videos"><i class="local nav-icon fa fa-video-camera"></i><span>视频</span><i
+                    class="my-icon nav-more"></i></a>
+        </li>
+        <li class="nav-item">
+            <a href="/disk/musics"><i class="local nav-icon fa fa-music"></i><span>音乐</span><i
+                    class="my-icon nav-more"></i></a>
+        </li>
+        <li class="nav-item">
+            <a href="/disk/rests"><i class="local nav-icon fa fa-bolt"></i><span>其他</span><i
+                    class="my-icon nav-more"></i></a>
+        </li>
+        <li class="nav-item">
+            <a href="/disk/recycle"><i class="local nav-icon fa fa-recycle"></i><span>回收站</span><i
+                    class="my-icon nav-more"></i></a>
+        </li>
+        <li class="nav-item">
+            <a href="/disk/share"><i class="local nav-icon fa fa-share-alt-square"></i><span>我的分享</span><i
+                    class="my-icon nav-more"></i></a>
+        </li>
+    </ul>
+</div>
+<div class="div-content">
+    <div class="top-div-location div1">
+        <div class="bs-example">
+            <div th:if="${type eq 'create'}" class="bs-example" data-example-id="single-button-dropdown">
+                <div id="upload-div" class="btn-group btn-bootstrap-shape" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary dropdown-toggle upload" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" th:id="${folderId}">
+                        <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
+                        上传
+                    </button>
+                    <ul class="dropdown-menu" style="min-width: 20px;">
+                        <li>
+                            <a id="file-click" href="#">文件上传</a>
+                            <form id="files" enctype="multipart/form-data">
+                                <input type="file" id="file" name="files" style="display: none" multiple/>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn-group btn-bootstrap-shape">
+                    <button type="button" class="btn btn-default" id="new-folder" th:name="${folderId}">
+                        <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+                        &nbsp;新建文件夹
+                    </button>
+                </div>
+                <div class="btn-group btn-bootstrap-shape">
+                    <button type="button" class="btn btn-default" disabled>
+                        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                        离线下载
+                    </button>
+                </div>
+                <div class="search-frame">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for...">
+                        <span class="input-group-btn">
+                             <button class="btn btn-default" type="button">Go!</button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div>
+            </div>
+            <div>
+                <div class="label-bootstrap-shape">
+                    <span class="label" style="color: #858584;font-weight: 400;" th:if="${location eq 'children'}">
+                        <span><a style="display: inline" th:if="${parent eq null}" href="/disk/all">返回上一级</a></span>
+                        <span><a style="display: inline" th:if="${parent ne null}"
+                                 th:href="|/folder/id/${parent.getParent().getFolderId()}|">返回上一级</a></span>
+                        <span style="border-left: 1px solid #2aabd2"></span>
+                        <span style="padding: 0 4px;"><a style="display: inline" href="/disk/all">全部文件</a></span>
+                        <span>&nbsp;>&nbsp;</span>
+                        <span th:if="${currentFolder ne null}" class="omit" style="width: 160px;text-align: left;"
+                              th:text="${currentFolder.getFolderName()}"></span>
+                    </span>
+                    <span class="label" style="color: #858584;font-weight: 400;"
+                          th:if="${location eq 'index'}">全部文件</span>
+                    <span th:if="${files ne null && folders ne null}" class="label search-frame"
+                          style="text-align: right;color: #858584;font-weight: 400;">已全部加载,共
+                        <span th:text="${files.size()+folders.size()}"></span>个</span>
+                    <span th:if="${files eq null && folders ne null}" class="label search-frame"
+                          style="text-align: right;color: #858584;font-weight: 400;">已全部加载,共
+                        <span th:text="${folders.size()}"></span>个</span>
+                    <span th:if="${files ne null && folders eq null}" class="label search-frame"
+                          style="text-align: right;color: #858584;font-weight: 400;">已全部加载,共
+                        <span th:text="${files.size()}"></span>个</span>
+                    <span th:if="${files eq null && folders eq null}" class="label search-frame"
+                          style="text-align: right;color: #858584;font-weight: 400;">已全部加载,共
+                        <span>0</span>个</span>
+                </div>
+            </div>
+            <div class="top-div">
+                <!--<ul class="nav-1 nav-pills">
+                    <li role="presentation" style="width: 600px;padding-left: 6px"><a href="#">文件名</a></li>
+                    <li role="presentation" style="width: 320px"><a href="#">大小</a></li>
+                    <li role="presentation" style="width: 210px"><a href="#">修改时间</a></li>
+                </ul>-->
+                <table id="table" data-toggle="table" data-height="600"
+                       data-sort-name="name" data-sort-order="desc" class="table table-hover"
+                       style="margin-top: -40px;" data-classes="table-no-bordered">
+                    <thead>
+                    <tr>
+                        <th style="" data-field="id">
+                            <ul class="nav-1 nav-pills">
+                                <li role="presentation" style="width: 600px;padding-left: 6px;font-weight: 400;"><a
+                                        href="#">文件名</a></li>
+                            </ul>
+                        </th>
+                        <th>
+                            <ul class="nav-1 nav-pills">
+                                <li role="presentation" style="width: 320px;font-weight: 400;"><a href="#">大小</a></li>
+                            </ul>
+                        </th>
+                        <th>
+                            <ul class="nav-1 nav-pills">
+                                <li th:if="${shares eq null}" role="presentation"
+                                    style="width: 210px;font-weight: 400;"><a
+                                        href="#">修改时间</a></li>
+                                <li th:if="${shares ne null}" role="presentation"
+                                    style="width: 210px;font-weight: 400;"><a
+                                        href="#">分享时间</a></li>
+                            </ul>
+                        </th>
+                        <th th:if="${shares ne null}">
+                            <ul class="nav-1 nav-pills">
+                                <li role="presentation" style="width: 210px;font-weight: 400;"><a href="#">分享密码</a></li>
+                            </ul>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:data-index="${folderStat.index}" th:id="${folder.getFolderId()}" class="folder"
+                        th:each="folder,folderStat:${folders}">
+                        <td style="">
+                            <span style="padding-left: 30px;line-height: 30px;font-size: 14px" class="omit"
+                                  th:title="${folder.getFolderName()}">
+                                <span class="glyphicon glyphicon-folder-close" aria-hidden="true"
+                                      style="color: #eea236;font-size: 25px;position: relative;top: 6px;"></span>
+                                <span class="folder" th:text="${folder.getFolderName()}"></span>
+                            </span>
+                        </td>
+                        <td style="">
+                            <span style="line-height: 30px;font-size: 14px;line-height: 37px;">--</span>
+                        </td>
+                        <td style="">
+                            <span class="create-time" style="line-height: 30px;font-size: 14px;line-height: 37px;"
+                                  th:text="${#dates.format(folder.getCreateTime(),'yyyy-MM-dd HH:mm:ss')}"></span>
+                        </td>
+                    </tr>
+                    <tr th:if="${files ne null}" th:data-index="${fileStat.index}" th:id="${file.getFileId()}"
+                        class="file"
+                        th:each="file,fileStat:${files}">
+                        <td style="">
+                            <span style="padding-left: 30px;line-height: 30px;font-size: 14px" class="omit"
+                                  th:title="${file.getFileName()}">
+                                <span th:if="${file.getClassify() eq 'MUSIC'}" class="glyphicon glyphicon-music"
+                                      aria-hidden="true"
+                                      style="color: #67b168;font-size: 25px;position: relative;top: 6px;"></span>
+                                <span th:if="${file.getClassify() eq 'IMAGE'}" class="glyphicon glyphicon-picture"
+                                      aria-hidden="true"
+                                      style="color: #eea236;font-size: 25px;position: relative;top: 6px;"></span>
+                                <span th:if="${file.getClassify() eq 'VIDEO'}" class="glyphicon glyphicon-film"
+                                      aria-hidden="true"
+                                      style="color: #3A99D8;font-size: 25px;position: relative;top: 6px;"></span>
+                                <span th:if="${file.getClassify() eq 'DOCUMENT'}" class="glyphicon glyphicon-book"
+                                      aria-hidden="true"
+                                      style="color: #333333;font-size: 25px;position: relative;top: 6px;"></span>
+                                <span th:if="${file.getClassify() eq 'OTHER'}" class="glyphicon glyphicon-question-sign"
+                                      aria-hidden="true"
+                                      style="color: #e74c3c;font-size: 25px;position: relative;top: 6px;"></span>
+                                <span class="folder" th:text="${file.getFileName()}"></span>
+                            </span>
+                            <span class="show" th:if="${shares eq null}"
+                                  style="float: right;    padding-top: 9px;padding-right: 20px;display: none">
+                                <span th:if="${state ne 'delete'}">
+                                    <a style="display: inherit;" th:href="|/file/download/${file.getFileId()}|">下载</a>
+                                    <a name="share" class="share"
+                                       th:fileId="${file.getFileId()}" th:if="${!file.getShare()}"
+                                       style="display: inherit;padding-left: 10px;"
+                                       data-toggle="modal" data-target="#shareModal">分享</a>
+                                    <a style="display: inherit;padding-left: 10px;"
+                                       th:href="|/file/delete/1/${file.getFileId()}|">删除</a>
+                                </span>
+                                <span th:if="${state eq 'delete'}">
+                                    <a style="display: inherit;" th:href="|/file/delete/0/${file.getFileId()}|">还原</a>
+                                </span>
+                            </span>
+                            <span class="show" th:if="${shares ne null}"
+                                  style="float: right;    padding-top: 9px;padding-right: 20px;display: none">
+                                <span>
+                                    <a style="display: inherit;" data-toggle="modal" class="closeShare"
+                                       th:shareId="${shares.get(file).getShareId()}"
+                                       data-target="#shareCloseModal">取消分享</a>
+                                </span>
+                            </span>
+                        </td>
+                        <td style="">
+                            <span style="line-height: 30px;font-size: 14px;line-height: 37px;"
+                                  th:text="${file.getSize()}"></span>
+                        </td>
+                        <td style="">
+                            <span class="create-time" style="line-height: 30px;font-size: 14px;line-height: 37px;"
+                                  th:if="${shares eq null}"
+                                  th:text="${#dates.format(file.getUpDateTime(),'yyyy-MM-dd HH:mm:ss')}"></span>
+                            <span class="create-time" style="line-height: 30px;font-size: 14px;line-height: 37px;"
+                                  th:if="${shares ne null}"
+                                  th:text="${#dates.format(shares.get(file).getShareDateTime(),'yyyy-MM-dd HH:mm:ss')}"></span>
+                        </td>
+                        <td style="" th:if="${shares ne null}">
+                            <span style="line-height: 30px;font-size: 14px;line-height: 37px;"
+                                  th:text="${shares.get(file).getPassword()}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="fixed-table-pagination" style="display: none;"></div>
+    </div>
+</div>
+<!--创建新文件-->
+<div th:if="${type eq 'create'}" class="ExFGye" id="folder_name" style="left: 20px; top: 103px; display: none;">
+    <div class="nmkdazXg">
+        <input class="GadHyA" type="text" value="">
+        <span class="fy51lb" style="padding-top: 3px;">
+            <span class="label label-info icon_font">
+                <span class="glyphicon glyphicon-ok"></span>
+            </span>
+        </span>
+        <span class="rloaB9m" style="padding-top: 3px;">
+            <span class="label label-info icon_font">
+                <span class="glyphicon glyphicon-remove"></span>
+            </span>
+        </span>
+    </div>
+</div>
+<div th:if="${shares eq null}" class="modal fade" id="shareModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width: 530px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title omit">Modal title</h4>
+                <div class="soft_function">
+                    <div class="soft_con_icon">
+                        <ul>
+                            <li class="current">
+                                <div style="font-size: 24px;text-align: center;">
+                                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                                </div>
+                                <spam id="pic_fun_adm">
+                                    <p>链接分享</p>
+                                </spam>
+                            </li>
+                            <li>
+                                <div style="font-size: 24px;text-align: center;">
+                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                </div>
+                                <span id="pic_fun_crm">
+                                    <p style="color: rgb(51, 51, 51);">发给好友</p>
+                                </span>
+                            </li>
+                            <li>
+                                <div style="font-size: 24px;text-align: center;">
+                                    <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                                </div>
+                                <span id="pic_fun_project">
+                                    <p style="color: rgb(51, 51, 51);">发送邮箱</p>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="create-share" class="div-table">
+                    <table class="share-table">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <label class="lable-font">分享形式</label>
+                            </td>
+                            <td>
+                                <div class="share-method-line">
+                                    <input type="radio" id="share-method-private" name="share-method" value="private"
+                                           checked="true">
+                                    <span class="icon radio-icon icon-radio-checked"></span>
+                                    <label for="share-method-private" class="lable-font">
+                                        <b>加密</b><span>仅限拥有密码者可查看，更加隐私安全</span>
+                                    </label>
+                                </div>
+                                <div class="share-method-line share-public-panel">
+                                    <input type="radio" disabled id="share-method-public" name="share-method"
+                                           value="public">
+                                    <span class="icon icon-radio-non radio-icon"></span>
+                                    <label for="share-method-public" class="lable-font">
+                                        <b>公开</b><span>任何人可查看或下载，同时出现在您的<a class="share-home-href"
+                                                                           target="_blank">个人主页</a>
+                                </span></label><span class="share-public-tip" style="display:none;"></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="lable-font">有效期</label>
+                            </td>
+                            <td>
+                                <button class="btn btn-default" type="submit">永久有效</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="modal-footer">
+                        <button id="create-link" type="button" class="btn btn-primary">创建链接</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+                <div id="share-message" class="create-success validity-section">
+                    <span class="private">
+                        <em class="glyphicon glyphicon-ok-sign"></em>成功创建公开链接
+                    </span>
+                    <span class="public">
+                        <em class="glyphicon glyphicon-ok-sign"></em>成功创建私密链接
+                    </span>
+                    <div style="padding-left: 10px">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="exampleInputAmount"
+                                           style="width: 260px;">
+                                    <div class="input-group-addon">永久有效</div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-primary-gai">复制链接及密码</button>
+                        </div>
+                        <div class="form-group form-inline" style="padding-top: 20px">
+                            <label for="exampleInputName2">提取密码</label>
+                            <input type="text" class="form-control" id="exampleInputName2" style="width: 80px" disabled>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="share-message-close" type="button" class="btn btn-default" data-dismiss="modal">取消
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:if="${shares ne null}" class="modal fade" id="shareCloseModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel">
+    <div class="modal-dialog" style="width: 500px;">
+        <div class="modal-content">
+            <div class="modal-header" style="height: 54px">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <br>
+                <p>取消分享后，该条分享记录将被删除，好友将无法再访问此分享链接。</p>
+                <p>你确认要取消分享吗？</p>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button id="confirmCloseShare" type="button" class="btn btn-primary">确认</button>
+                <button id="closeConfirmFrame" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="user-frame" style="display: none;">
+    <div class="user-content">
+        <div>
+            <img src="/image/user_48.png" class="user-img">
+            <div style="display: inline-block">
+                <span class="omit user-name" style="width: 180px;"><shiro:principal property="email"/></span>
+            </div>
+        </div>
+    </div>
+    <div style="background: #fff;">
+        <div style="padding: 8px 10px;" class="user-frame-item">用户账户具体操作(未全部完成)</div>
+        <div style="padding: 8px 10px;" class="user-frame-item">
+            <a class="user-open" href="#">个人资料</a>
+        </div>
+        <div style="padding: 8px 10px;" class="user-frame-item">
+            <a class="user-open" href="/user/logout">注销</a>
+        </div>
+        <div style="padding: 8px 10px;" class="user-frame-item">
+            <a class="user-open-close" href="#">关闭</a>
+        </div>
+    </div>
+</div>
+<script src="/js/jquery/jquery.min.js"></script>
+<script src="/js/jquery/jquery-migrate-1.2.1.js"></script>
+<script src="/js/nav.js"></script>
+<script src="/js/mouseRight.min.js"></script>
+<script src="/js/bootstrap/bootstrap.js"></script>
+<script src="/js/bootstrap/bootstrap-table.min.js"></script>
+<script src="/js/jquery/jquery.timers.js"></script>
+<script src="/js/index.js"></script>
+<script>
+    $('.user-frame-item').hover(function () {
+        $(this).css('background', '#f0eaff');
+    }, function () {
+        $(this).css('background', '#ffffff');
+    });
+</script>
+</body>
+</html>
+
+

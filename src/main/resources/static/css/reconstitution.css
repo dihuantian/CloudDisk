@@ -1,0 +1,53 @@
+.btn-bootstrap-shape {
+    padding-left: 14px;
+}
+
+.label-bootstrap-shape {
+    padding-left: 14px;
+    position: relative;
+    top: 20px;
+}
+
+.nav-1 {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.nav-1:after{
+    clear: both;
+}
+.nav-1:before{
+    display: table;
+    content: " ";
+}
+
+.nav-1:after{
+    clear: both;
+}
+
+
+.nav > li {
+    position: relative;
+    display: block;
+}
+.nav-1 > li > a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+.nav-1 > li > a:hover,
+.nav-1 > li > a:focus {
+    text-decoration: none;
+    background-color: #eee;
+}
+.nav-1 > li.disabled > a {
+    color: #777;
+}
+.nav-1 > li.disabled > a:hover,
+.nav-1 > li.disabled > a:focus {
+    color: #777;
+    text-decoration: none;
+    cursor: not-allowed;
+    background-color: transparent;
+}
