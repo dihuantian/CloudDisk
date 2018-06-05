@@ -386,7 +386,7 @@ var clipboard = new ClipboardJS('#copy-link-pass', {
     text: function () {
         var link = "分享链接:" + $('#exampleInputAmount').val();
         var pass = "密码:" + $('#exampleInputName2').val();
-        return link + '   ' + pass;;
+        return link +  pass;;
     }
 });
 clipboard.on('success', function (e) {
