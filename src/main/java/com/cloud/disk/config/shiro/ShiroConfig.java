@@ -46,13 +46,13 @@ public class ShiroConfig {
         //设置过滤器路径
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         filterChainDefinitionMap.put("/image/**", "anon");
+        filterChainDefinitionMap.put("/email/**", "anon");
         filterChainDefinitionMap.put("/css/**", "anon");
         filterChainDefinitionMap.put("/js/**", "anon");
         filterChainDefinitionMap.put("/font/**", "anon");
         filterChainDefinitionMap.put("/security/**", "anon");
         filterChainDefinitionMap.put("/share/**", "anon");
         filterChainDefinitionMap.put("/error", "anon");
-        filterChainDefinitionMap.put("/email/**", "anon");
         filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;

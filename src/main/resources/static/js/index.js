@@ -323,3 +323,43 @@ $('#nav').click(function () {
 $('.user-open-close').on('click hover', function () {
     $('.user-frame').css('display', 'none');
 });
+
+/*删除*/
+
+$('.deleteState').click(function () {
+    var fileId = $(this).attr('fileId');
+    if (fileId != undefined || fileId == '') {
+
+    } else {
+        $.ajax({
+            url: '/file/delete/1/' + fileId,
+            type: 'GET',
+            async: true,
+            success: function (data) {
+                var html = '<span class="reminder" style="background: #3b8cff;display: inline-block;width: 220px;height: 50px;\n' +
+                    'line-height: 50px; color: #ffffff; position: absolute;left:calc(50% - 110px);top: 20px;text-align: center;\n' +
+                    'border: 1px solid #3b8cff;box-shadow:0 0 8px 2px #3b8cff">data</span>'
+                $('body').append(html);
+                countdown();
+            },
+            error: function (data) {
+                var html = '<span class="reminder" style="background: #3b8cff;display: inline-block;width: 220px;height: 50px;\n' +
+                    'line-height: 50px; color: #ffffff; position: absolute;left:calc(50% - 110px);top: 20px;text-align: center;\n' +
+                    'border: 1px solid #3b8cff;box-shadow:0 0 8px 2px #3b8cff">服务器异常</span>'
+                $('body').append(html);
+                countdown();
+            }
+        });
+    }
+});
+
+function countdown() {
+    $('body').oneTime('3s', 'Q', function () {
+        $('.reminder').click();
+    });
+}
+
+$('body').on('click', '.reminder', function () {
+    $(this).remove();
+    $('body').stopTime('Q');
+});

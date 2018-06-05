@@ -5,7 +5,7 @@
     <title>用户首页</title>
     <link rel="stylesheet" type="text/css" href="/css/nav.css"/>
     <link rel="stylesheet" type="text/css" href="/font/iconfont.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/awesome/font-awesome.4.6.0.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/awesome/font-awesome.css"/>
     <link rel="stylesheet" type="text/css" href="/css/mouse-right.css"/>
     <link rel="stylesheet" type="text/css" href="/css/index.css"/>
     <link rel="stylesheet" type="text/css" href="/css/reconstitution.css"/>
@@ -214,8 +214,7 @@
                                        th:fileId="${file.getFileId()}" th:if="${!file.getShare()}"
                                        style="display: inherit;padding-left: 10px;"
                                        data-toggle="modal" data-target="#shareModal">分享</a>
-                                    <a style="display: inherit;padding-left: 10px;"
-                                       th:href="|/file/delete/1/${file.getFileId()}|">删除</a>
+                                    <span style="display: inherit;padding-left: 10px;" class="deleteState" th:fileId="${file.getFileId()}">删除</span>
                                 </span>
                                 <span th:if="${state eq 'delete'}">
                                     <a style="display: inherit;" th:href="|/file/delete/0/${file.getFileId()}|">还原</a>
