@@ -62,5 +62,4 @@ public class FileController {
     public String deleteFile(@PathVariable Long id,@PathVariable Integer state) {
         return fileOperationService.fileDeleteStat(id,state);
     }
-
 }

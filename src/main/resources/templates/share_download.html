@@ -27,7 +27,7 @@
                            style="margin-right: 10px;width: 80px">
                             <span class="glyphicon glyphicon-download-alt"></span>下载
                         </a>
-                        <button class="btn btn-default">
+                        <button class="btn btn-default" id="QrCode-btn">
                             <span class="glyphicon glyphicon-qrcode"></span>
                         </button>
                     </div>
@@ -50,5 +50,19 @@
         </div>
     </div>
 </div>
+<div id="QrCode" style="display: inline-block;width: 141px;height: 151px;background: #ffffff;z-index: 1000; display: none;
+    border: 1px solid #ABB1B7;position: absolute;top: 96px;left: 860px">
+    <img th:src="|/share/qrcode/${share.getShareId()}|"
+         style="width: 99px;height: 99px;border: 1px solid #ABB1B7;position: relative;top:20px;left: 20px">
+    <div style="font-size: 14px;text-align: center;padding-top: 25px">扫描二维码</div>
+</div>
+<script src="/js/jquery/jquery.min.js"></script>
+<script>
+    $('#QrCode-btn,QrCode').hover( function () {
+        $('#QrCode').css('display', 'block');
+    }, function () {
+        $('#QrCode').css('display', 'none');
+    })
+</script>
 </body>
 </html>

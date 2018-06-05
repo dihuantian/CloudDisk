@@ -1,13 +1,16 @@
 package com.cloud.disk.web.controller;
 
 import com.cloud.disk.domain.File;
+import com.cloud.disk.domain.Share;
 import com.cloud.disk.service.FileOperationService;
 import com.cloud.disk.service.ShareService;
 import com.cloud.disk.situation.ShareEnum;
 import com.cloud.disk.situation.UserLoginEnum;
+import com.cloud.disk.unit.QrcodeUtil;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -69,13 +72,13 @@ public class ShareController {
     }
 
     @GetMapping(value = "/get/{shareId}")
-    public String getSahre(@PathVariable Long shareId, HttpSession session,ModelMap map) {
+    public String getSahre(@PathVariable Long shareId, HttpSession session, ModelMap map) {
         String code = shareService.getSharePage(shareId, session);
         if (code.equals(ShareEnum.SHARE_NOT_EXIT.getKey()))
             return "redirect:/error";
         else if ((code.equals(ShareEnum.SHARE_FILE_NOT_VERIFY.getKey())))
             return "redirect:/share/page/" + shareId;
-        map.addAttribute("share",shareService.getFile(shareId));
+        map.addAttribute("share", shareService.getFile(shareId));
         return "share_download";
     }
 
@@ -89,11 +92,12 @@ public class ShareController {
     public ResponseEntity<byte[]> shareDownload(HttpSession session, @PathVariable Long shareId) {
         Map<String, Object> map = shareService.download(session, shareId);
         HttpHeaders headers = new HttpHeaders();
-        if (map.containsKey(ShareEnum.SHARE_FILE_NOT_VERIFY.getKey())){
+        if (map.containsKey(ShareEnum.SHARE_FILE_NOT_VERIFY.getKey())) {
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(ShareEnum.SHARE_FILE_NOT_VERIFY.getKey().getBytes());
         }
         if (map.containsKey(ShareEnum.SHARE_NOT_EXIT.getKey()))
-            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(ShareEnum.SHARE_NOT_EXIT.getKey().getBytes());;
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(ShareEnum.SHARE_NOT_EXIT.getKey().getBytes());
+        ;
         File file = (File) map.get("file");
         byte[] content = (byte[]) map.get("content");
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -106,5 +110,15 @@ public class ShareController {
                 .contentLength(content.length)
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(content);
+    }
+
+    @GetMapping(value = "/qrcode/{shareId}")
+    @ResponseBody
+    public ResponseEntity<byte[]> shareQrCode(@PathVariable Long shareId) {
+        Share share = shareService.getFile(shareId);
+        byte[] iamge = QrcodeUtil.generateQrcode(share.getSharePath(), 100, 100);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<byte[]>((byte[]) iamge, headers, HttpStatus.CREATED);
     }
 }

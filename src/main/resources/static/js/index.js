@@ -324,6 +324,14 @@ $(function () {
             });
         }
     });
+    var clipboard = new ClipboardJS('#cpoy-share');
+    clipboard.on('success', function (e) {
+        alert("复制成功");
+    });
+
+    clipboard.on('error', function (e) {
+        console.log(e);
+    });
 })
 
 /*用户相关*/
@@ -372,3 +380,19 @@ function removeTr(id) {
     var fileId = '#' + id;
     $('#table').find('' + fileId + '').remove();
 }
+
+/*复制*/
+var clipboard = new ClipboardJS('#copy-link-pass', {
+    text: function () {
+        var link = "分享链接:" + $('#exampleInputAmount').val();
+        var pass = "密码:" + $('#exampleInputName2').val();
+        return link + '   ' + pass;;
+    }
+});
+clipboard.on('success', function (e) {
+    alert("复制成功");
+});
+
+clipboard.on('error', function (e) {
+    console.log(e);
+});

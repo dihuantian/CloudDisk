@@ -147,6 +147,9 @@ public class ShareServiceImpl implements ShareService {
             Share share = optionalShare.get();
             if (!getCurrentUser().getUserId().equals(user.getUserId()))
                 return false;
+            File file = share.getFile();
+            file.setShare(false);
+            fileRepository.save(file);
             shareRepository.delete(share);
             return true;
         }
@@ -207,7 +210,7 @@ public class ShareServiceImpl implements ShareService {
     @Override
     public Share getFile(Long shareId) {
         Share share = shareRepository.findById(shareId).get();
-        if (share!=null)
+        if (share != null)
             return share;
         return null;
     }
