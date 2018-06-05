@@ -79,7 +79,7 @@ $('input[id=file]').change(function () {
                 } else if (e == "FILE_UPLOAD_SUCCESS") {
                     title = '上传成功';
                 }
-                $('body').find('#mySmallModalLabel').text(title);
+                $('body').find('#mySmallModalLabel').text(title + ',' + content);
             },
             error: function (e) {
                 title = '上传失败';
@@ -92,7 +92,7 @@ $('input[id=file]').change(function () {
         html += '<div class="modal-content">';
         html += '<div class="modal-header" style="height: 50px">';
         html += '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'
-        html += '<h4 class="modal-title" id="mySmallModalLabel">' + title + '</h4>';
+        html += '<h4 class="modal-title" style="font-size: 14px" id="mySmallModalLabel">' + title + '</h4>';
         html += '</div>';
         html += '<div class="modal-body">' + content;
         html += '<div class="progress">'
@@ -292,6 +292,38 @@ $(function () {
             });
         }
     });
+
+
+    /*删除*/
+
+    $('.deleteState').click(function () {
+        var fileId = $(this).attr('fileId');
+        var state = $(this).attr('state');
+        if (fileId == undefined || fileId == '') {
+
+        } else {
+            $.ajax({
+                url: '/file/delete/' + state + '/' + fileId,
+                type: 'GET',
+                async: true,
+                success: function (data) {
+                    var html = '<span class="reminder" style="background: #3b8cff;display: inline-block;width: 220px;height: 50px;\n' +
+                        'line-height: 50px; color: #ffffff; position: absolute;left:calc(50% - 110px);top: 20px;text-align: center;\n' +
+                        'border: 1px solid #3b8cff;box-shadow:0 0 8px 2px #3b8cff">data</span>'
+                    $('body').append(html);
+                    removeTr(fileId);
+                    countdown();
+                },
+                error: function (data) {
+                    var html = '<span class="reminder" style="background: #3b8cff;display: inline-block;width: 220px;height: 50px;\n' +
+                        'line-height: 50px; color: #ffffff; position: absolute;left:calc(50% - 110px);top: 20px;text-align: center;\n' +
+                        'border: 1px solid #3b8cff;box-shadow:0 0 8px 2px #3b8cff">服务器异常</span>'
+                    $('body').append(html);
+                    countdown();
+                }
+            });
+        }
+    });
 })
 
 /*用户相关*/
@@ -324,34 +356,6 @@ $('.user-open-close').on('click hover', function () {
     $('.user-frame').css('display', 'none');
 });
 
-/*删除*/
-
-$('.deleteState').click(function () {
-    var fileId = $(this).attr('fileId');
-    if (fileId != undefined || fileId == '') {
-
-    } else {
-        $.ajax({
-            url: '/file/delete/1/' + fileId,
-            type: 'GET',
-            async: true,
-            success: function (data) {
-                var html = '<span class="reminder" style="background: #3b8cff;display: inline-block;width: 220px;height: 50px;\n' +
-                    'line-height: 50px; color: #ffffff; position: absolute;left:calc(50% - 110px);top: 20px;text-align: center;\n' +
-                    'border: 1px solid #3b8cff;box-shadow:0 0 8px 2px #3b8cff">data</span>'
-                $('body').append(html);
-                countdown();
-            },
-            error: function (data) {
-                var html = '<span class="reminder" style="background: #3b8cff;display: inline-block;width: 220px;height: 50px;\n' +
-                    'line-height: 50px; color: #ffffff; position: absolute;left:calc(50% - 110px);top: 20px;text-align: center;\n' +
-                    'border: 1px solid #3b8cff;box-shadow:0 0 8px 2px #3b8cff">服务器异常</span>'
-                $('body').append(html);
-                countdown();
-            }
-        });
-    }
-});
 
 function countdown() {
     $('body').oneTime('3s', 'Q', function () {
@@ -363,3 +367,8 @@ $('body').on('click', '.reminder', function () {
     $(this).remove();
     $('body').stopTime('Q');
 });
+
+function removeTr(id) {
+    var fileId = '#' + id;
+    $('#table').find('' + fileId + '').remove();
+}

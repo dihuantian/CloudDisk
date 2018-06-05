@@ -9,9 +9,11 @@ import com.cloud.disk.service.LoginService;
 import com.cloud.disk.situation.UserLoginEnum;
 import com.cloud.disk.unit.UserUnit;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.ConcurrentAccessException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,6 +61,8 @@ public class LoginServiceImpl implements LoginService {
                 return UserLoginEnum.USER_LOGIN_PASS_ERROR.getKey();
             } catch (UnknownAccountException e) {
                 return UserLoginEnum.USER_LOGIN_USER_ERROR.getKey();
+            }catch (ConcurrentAccessException e){
+                return UserLoginEnum.USER_LOGIN_STATUS.getKey();
             }
         }
     }

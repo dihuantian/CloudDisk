@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <title>用户首页</title>
     <link rel="stylesheet" type="text/css" href="/css/nav.css"/>
-    <link rel="stylesheet" type="text/css" href="/font/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="/fonts/iconfont.css"/>
     <link rel="stylesheet" type="text/css" href="/css/awesome/font-awesome.css"/>
     <link rel="stylesheet" type="text/css" href="/css/mouse-right.css"/>
     <link rel="stylesheet" type="text/css" href="/css/index.css"/>
@@ -214,10 +214,10 @@
                                        th:fileId="${file.getFileId()}" th:if="${!file.getShare()}"
                                        style="display: inherit;padding-left: 10px;"
                                        data-toggle="modal" data-target="#shareModal">分享</a>
-                                    <span style="display: inherit;padding-left: 10px;" class="deleteState" th:fileId="${file.getFileId()}">删除</span>
+                                    <span style="display: inherit;padding-left: 10px;cursor: pointer" state="1" class="deleteState" th:fileId="${file.getFileId()}">删除</span>
                                 </span>
                                 <span th:if="${state eq 'delete'}">
-                                    <a style="display: inherit;" th:href="|/file/delete/0/${file.getFileId()}|">还原</a>
+                                    <span style="display: inherit;padding-left: 10px;cursor: pointer" state="0" class="deleteState"  th:fileId="${file.getFileId()}">还原</span>
                                 </span>
                             </span>
                             <span class="show" th:if="${shares ne null}"
